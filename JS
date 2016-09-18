@@ -8,186 +8,183 @@ BREAKPOINTS:
 1136px
 */
 $(".remove-link").click(function(e) { // When the user clicks on a red x
-       //  e.preventDefault();
-       
-       
-        $(this).closest(".box").fadeOut(800); // The nearest box to that red x will disappear
+  //  e.preventDefault();
 
-      });
+  $(this).closest(".box").fadeOut(800); // The nearest box to that red x will disappear
 
-function getStreams(name, processor) {
-   
-        if (processor.error == "Unprocessable Entity") {
-        //  console.log(processor);
-          $(".removedStreams").prepend(
-            '<div class="box thirtythree"> <div class="imageTitleGame"> <div class="image"><img src=http://www.assaultfire.ph/main/wp-content/uploads/2015/12/Ban_Hammer.jpg id="img0" /></div> <div class="titleANDgame"> <div class="title" id="title0"><a href="https://www.twitch.tv/'+name+'">' + name + '</a></div><div class="game" id="game0">This streamer has either been banned or removed their account </div> </div> </div> <div class="status" id="status0"> </div> <div class="viewers" id="viewers0"> </div> <div class="time" id="time0"> </div> </div>'
-          );
+});
 
-        } else if (!processor.stream) {
-        //  console.log(processor);
-          $(".offlineStreams").prepend(
+function getStreams(name, processor) { // This is to add streams
 
-            '<div class="box thirtythree"> <div class="imageTitleGame"> <div class="image"> <img src=http://i1149.photobucket.com/albums/o585/CrumrineCoder/static_zpsqevfqgdn.png id="img0" /> </div> <div class="titleANDgame"> <div class="title" id="title0"><a href="https://www.twitch.tv/'+name+'">' + name + '</a></div><div class="game" id="game0"> offline </div> </div> </div> <div class="status" id="status0"> </div> <div class="viewers" id="viewers0"> </div> <div class="time" id="time0"> </div> </div>'
-          );
-        } else if(processor.stream) {
+  if (processor.error == "Unprocessable Entity") {
+    //  console.log(processor);
+    $(".removedStreams").prepend(
+      '<div class="box thirtythree"> <div class="imageTitleGame"> <div class="image"><img src=http://www.assaultfire.ph/main/wp-content/uploads/2015/12/Ban_Hammer.jpg id="img0" /></div> <div class="titleANDgame"> <div class="title" id="title0"><a href="https://www.twitch.tv/' + name + '">' + name + '</a></div><div class="game" id="game0">This streamer has either been banned or removed their account </div> </div> </div> <div class="status" id="status0"> </div> <div class="viewers" id="viewers0"> </div> <div class="time" id="time0"> </div> </div>'
+    );
 
-          $(".onlineStreams").prepend('<div class="box thirtythree online ' + processor.stream.channel.mature + ' ' + processor.stream.channel.broadcaster_language + '"> <div class="imageTitleGame"> <div class="image"> <img src=' + processor.stream.channel.logo + ' id="img0" />  </div> <a href="' + processor.stream.channel.url + '"><div class="titleANDgame"> <div class="topline"><div class="title" id="title0">' + processor.stream.channel.display_name + '</a><i class="fa fa-times remove-link"></i></div></div><div class="game" id="game0">' + processor.stream.channel.game + '</div> </div> </div> <div class="status" id="status0">' + (processor.stream.channel.status).replace(/(([^\s]+\s\s*){7})(.*)/, "$1…") + '</div> <div class="viewers" id="viewers0">' + "Viewers: " + processor.stream.viewers + '</div> <div class="time" id="time0">' + getTime(processor) + '</div> </div>');
-           
-        }
-      }
+  } else if (!processor.stream) {
+    //  console.log(processor);
+    $(".offlineStreams").prepend(
 
-function getTime(data) {
-          var isItANewDay = "";
-          var actualTime = "";
+      '<div class="box thirtythree"> <div class="imageTitleGame"> <div class="image"> <img src=http://i1149.photobucket.com/albums/o585/CrumrineCoder/static_zpsqevfqgdn.png id="img0" /> </div> <div class="titleANDgame"> <div class="title" id="title0"><a href="https://www.twitch.tv/' + name + '">' + name + '</a></div><div class="game" id="game0"> offline </div> </div> </div> <div class="status" id="status0"> </div> <div class="viewers" id="viewers0"> </div> <div class="time" id="time0"> </div> </div>'
+    );
+  } else if (processor.stream) {
 
-          var streamingDay = parseInt(data.stream.created_at.substr(8, 2));
+    $(".onlineStreams").prepend('<div class="box thirtythree online ' + processor.stream.channel.mature + ' ' + processor.stream.channel.broadcaster_language + '"> <div class="imageTitleGame"> <div class="image"> <img src=' + processor.stream.channel.logo + ' id="img0" />  </div> <a href="' + processor.stream.channel.url + '"><div class="titleANDgame"> <div class="topline"><div class="title" id="title0">' + processor.stream.channel.display_name + '</a><i class="fa fa-times remove-link"></i></div></div><div class="game" id="game0">' + processor.stream.channel.game + '</div> </div> </div> <div class="status" id="status0">' + (processor.stream.channel.status).replace(/(([^\s]+\s\s*){7})(.*)/, "$1…") + '</div> <div class="viewers" id="viewers0">' + "Viewers: " + processor.stream.viewers + '</div> <div class="time" id="time0">' + getTime(processor) + '</div> </div>');
 
-          if (data.stream.created_at.charAt(11) == "1") {
-            actualTime = (data.stream.created_at).substr(11);
-
-          } else {
-            actualTime = (data.stream.created_at).substr(12)
-
-          }
-          actualTime = actualTime.substring(0, actualTime.length - 4);
-          actualTime = actualTime.replace(/:/g, '');
-          actualTime = parseInt(actualTime);
-
-          var date = new Date(Date.now());
-          var currentDay = date.getDate();
-
-          var timestr = date.toLocaleTimeString();
-          if (timestr.substr(8) == "PM") {
-            timestr = timestr.substr(0, 5);
-
-            timestr = timestr.replace(/:/g, '');
-
-            timestr = parseInt(timestr) + 1200;
-
-          } else {
-
-            timestr = timestr.substr(0, 5);
-
-            timestr = timestr.replace(/:/g, '');
-
-            timestr = parseInt(timestr);
-          }
-
-          var timeSince = 0;
-
-          var roundedTimeSince = 0;
-       
-          if (streamingDay < currentDay) {
-
-            timeSince = (2400 - actualTime) + timestr;
-
-            roundedTimeSince = Math.round(timeSince / 100);
-            return ("Started steaming " + roundedTimeSince + " hours ago.");
-          } else {
-
-            timeSince = timestr - actualTime;
-            roundedTimeSince = Math.round(timeSince / 100);
-            return ("Started steaming " + roundedTimeSince + " hours ago.")
-
-          }
-
-        }
-
-
-$('#submit').click(function (e) {
-      e.preventDefault(); 
-     
-         $.getJSON("https://api.twitch.tv/kraken/streams/" + $("#tftextinput").val() + "?callback=?", function(json) {
-      console.log(json.error == "Unprocessable Entity");
-      var channelName = json._links.channel;
-    if(!json.stream || json.error == "Unprocessable Entity"){
-       console.log("YES!");
-     getStreams(channelName.replace("https://api.twitch.tv/kraken/channels/", ""), json);
-     }    
-     else if(json.stream){
-          getStreams($("#tftextinput").val(), json);
-     }
-        
-  
-             
-            $(".remove-link").click(function(e) {
-       //  e.preventDefault();
-        
-      //  $(this).closest(".box").addClass("removed")
-        $(this).closest(".box").remove();
-
-      });
-                   
-         });
-$("#tftextinput").val("");
-      });
-
-var names = ["ESL_SC2", "OgamingSC2",  "VooblyOfficial", "T90Official", "Pyrionflax", "handmade_hero", "DDRJake", "Resonance22",  "cretetion", "freecodecamp", "dota2ti_ru", "dota2ti_pt", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "jacsebalon", "Joedaddy505"];
-
-var newNames = [];
-var redacted = [];
-
-var jsoncall = "";
-runProgram();
-
-function runProgram() {
-
-  names.forEach(function(data, i) {
-
-    jsoncall = "https://api.twitch.tv/kraken/streams/" + names[i] + "?callback=?";
-    $.getJSON(jsoncall, function(data) {
-      console.log(jsoncall);
-     // console.log(data.stream.channel);
-      document.getElementById('english').onclick = function() {
-        if (data.stream && !$("#'" + i + "'").hasClass("test"))
-          $(".:not(.en)").toggle();
-      };
-     
-      getStreams(names[i], data);
-
-        $(".remove-link").click(function(e) {
-         e.preventDefault();
-     
-        //console.log($(this).closest(".box"));
-        // $(this).closest(".box").addClass("removed")
-        $(this).closest(".box").remove();
-
-      });      
-  
-
-      document.getElementById('english').onclick = function() {
-        if (document.getElementById("english").textContent == "English Only: No") {
-          $(".online").not(".en").fadeOut(300);
-          document.getElementById("english").textContent = "English Only: Yes";
-
-        } else if (document.getElementById("english").textContent == "English Only: Yes") {
-         
-          $(".online").not(".en").fadeIn(300);
-          
-          document.getElementById("english").textContent = "English Only: No";
-        }
-      }
-
-      document.getElementById('mature').onclick = function() {
-        if (document.getElementById("mature").textContent == "Mature Only: No") {
-          $(".false").fadeOut(300);
-          document.getElementById("mature").textContent = "Mature Only: Yes";
-
-        } else if (document.getElementById("mature").textContent == "Mature Only: Yes") {
-         
-          $(".false").fadeIn(300);
-        
-          document.getElementById("mature").textContent = "Mature Only: No";
-        }
-      }
-
-     
-        
-
-    });
-  });
+  }
 }
 
+function getTime(data) {
+  var isItANewDay = "";
+  var actualTime = "";
 
+  var streamingDay = parseInt(data.stream.created_at.substr(8, 2));
 
+  if (data.stream.created_at.charAt(11) == "1") {
+    actualTime = (data.stream.created_at).substr(11);
 
+  } else {
+    actualTime = (data.stream.created_at).substr(12)
+
+  }
+  actualTime = actualTime.substring(0, actualTime.length - 4);
+  actualTime = actualTime.replace(/:/g, '');
+  actualTime = parseInt(actualTime);
+
+  var date = new Date(Date.now());
+  var currentDay = date.getDate();
+
+  var timestr = date.toLocaleTimeString();
+  if (timestr.substr(8) == "PM") {
+    timestr = timestr.substr(0, 5);
+
+    timestr = timestr.replace(/:/g, '');
+
+    timestr = parseInt(timestr) + 1200;
+
+  } else {
+
+    timestr = timestr.substr(0, 5);
+
+    timestr = timestr.replace(/:/g, '');
+
+    timestr = parseInt(timestr);
+  }
+
+  var timeSince = 0;
+
+  var roundedTimeSince = 0;
+
+  if (streamingDay < currentDay) {
+
+    timeSince = (2400 - actualTime) + timestr;
+
+    roundedTimeSince = Math.round(timeSince / 100);
+    return ("Started steaming " + roundedTimeSince + " hours ago.");
+  } else {
+
+    timeSince = timestr - actualTime;
+    roundedTimeSince = Math.round(timeSince / 100);
+    return ("Started steaming " + roundedTimeSince + " hours ago.")
+
+  }
+
+}
+
+var names = ["ESL_SC2", "OgamingSC2", "VooblyOfficial", "T90Official", "Pyrionflax", "handmade_hero", "DDRJake", "Resonance22", "cretetion", "freecodecamp", "dota2ti_ru", "dota2ti_pt", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "jacsebalon", "Joedaddy505"];
+
+$('#submit').click(function(e) {
+      e.preventDefault();
+      $.ajax({
+          type: 'GET',
+          url: 'https://api.twitch.tv/kraken/streams/' + $("#tftextinput").val(),
+          headers: {
+            'Client-ID': 'qq6g00bkkiultjwkvpkewm5mkr44ock'
+          },
+          success: function(data) {
+
+            console.log(data.error == "Unprocessable Entity");
+            var channelName = data._links.channel;
+            if (!data.stream || data.error == "Unprocessable Entity") {
+              console.log("YES!");
+              getStreams(channelName.replace("https://api.twitch.tv/kraken/channels/", ""), data);
+            } else if (data.stream) {
+              getStreams($("#tftextinput").val(), data);
+            }
+
+            $(".remove-link").click(function(e) {
+              //  e.preventDefault();
+
+              //  $(this).closest(".box").addClass("removed")
+              $(this).closest(".box").remove();
+
+            });
+
+          }
+      }); $("#tftextinput").val("");
+      });
+
+    var newNames = [];
+    var redacted = [];
+
+    var jsoncall = ""; runProgram();
+
+    function runProgram() {
+      console.log(names);
+      names.forEach(function(data, i) {
+        $.ajax({
+          type: 'GET',
+          url: 'https://api.twitch.tv/kraken/streams/' + names[i],
+          headers: {
+            'Client-ID': 'qq6g00bkkiultjwkvpkewm5mkr44ock'
+          },
+          success: function(data) {
+
+            document.getElementById('english').onclick = function() {
+              if (data.stream && !$("#'" + i + "'").hasClass("test"))
+                $(".:not(.en)").toggle();
+            };
+
+            getStreams(names[i], data);
+
+            $(".remove-link").click(function(e) {
+              e.preventDefault();
+
+              //console.log($(this).closest(".box"));
+              // $(this).closest(".box").addClass("removed")
+              $(this).closest(".box").remove();
+
+            });
+
+            document.getElementById('english').onclick = function() {
+              if (document.getElementById("english").textContent == "English Only: No") {
+                $(".online").not(".en").fadeOut(300);
+                document.getElementById("english").textContent = "English Only: Yes";
+
+              } else if (document.getElementById("english").textContent == "English Only: Yes") {
+
+                $(".online").not(".en").fadeIn(300);
+
+                document.getElementById("english").textContent = "English Only: No";
+              }
+            }
+
+            document.getElementById('mature').onclick = function() {
+              if (document.getElementById("mature").textContent == "Mature Only: No") {
+                $(".false").fadeOut(300);
+                document.getElementById("mature").textContent = "Mature Only: Yes";
+
+              } else if (document.getElementById("mature").textContent == "Mature Only: Yes") {
+
+                $(".false").fadeIn(300);
+
+                document.getElementById("mature").textContent = "Mature Only: No";
+              }
+            }
+
+          }
+        });
+
+      });
+    }
